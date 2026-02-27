@@ -1,0 +1,355 @@
+{
+  "metadata": {
+    "generated_date": "2026-02-02",
+    "workspace": "d:\\anjoytell",
+    "description": "Modbus register maps and configuration data for Anjoytell projects",
+    "primary_projects": ["oi-7010", "oi-9850"]
+  },
+  "projects": {
+    "oi-7010": {
+      "project_name": "OI-7010 Multi-Channel Gas Monitor",
+      "current_version": {
+        "major": 6,
+        "minor": 1,
+        "build": 0,
+        "date": "2023-05-30",
+        "description": "Digi Radio Support"
+      },
+      "modbus_config": {
+        "protocol": "Modbus RTU",
+        "role": "Slave",
+        "supported_protocols": ["MODBUS", "OTISBUS", "DATACOMMAND"],
+        "max_protocol_value": 2,
+        "baud_rates": [9600, 19200, 38400, 57600, 115200],
+        "data_bits": 8,
+        "stop_bits": 1,
+        "parity_options": ["None", "Even", "Odd"],
+        "default_baud": 9600,
+        "buffer_tx_size": 256,
+        "buffer_rx_size": 256
+      },
+      "channel_variants": [
+        {"name": "CHANNELS_8", "num_channels": 8, "num_monitors": 16, "num_4_20": 4},
+        {"name": "CHANNELS_12", "num_channels": 12, "num_monitors": 16, "num_4_20": 4},
+        {"name": "CHANNELS_32", "num_channels": 32, "num_monitors": 16, "num_4_20": 4},
+        {"name": "CHANNELS_64", "num_channels": 64, "num_monitors": 16, "num_4_20": 4}
+      ],
+      "source_files": [
+        {"path": "anjoytell/oi-7010-master/oi-7010-master/files/main.c", "type": "implementation", "lines": 7611, "description": "Main program logic"},
+        {"path": "anjoytell/oi-7010-master/oi-7010-master/files/locals.h", "type": "header", "description": "Local definitions and version history"},
+        {"path": "anjoytell/oi-7010-master/oi-7010-master/files/modBus.h", "type": "header", "description": "Modbus function declarations"},
+        {"path": "anjoytell/oi-7010-master/oi-7010-master/files/gdi.c", "type": "implementation", "description": "Graphics display interface"},
+        {"path": "anjoytell/oi-7010-master/oi-7010-master/files/datalinker.c", "type": "implementation", "description": "DataCommand protocol"}
+      ],
+      "modbus_functions": [
+        {"code": 3, "name": "Read Holding Registers", "description": "Read values from holding registers"},
+        {"code": 4, "name": "Read Input Registers", "description": "Read values from input registers"},
+        {"code": 6, "name": "Write Single Register", "description": "Write a single holding register"},
+        {"code": 16, "name": "Write Multiple Registers", "description": "Write multiple holding registers"}
+      ],
+      "register_map": {
+        "system_registers": [
+          {"address": 6000, "type": "holding", "access": "RW", "name": "Modbus_Address", "data_type": "uint16", "range": "1-247", "description": "Device Modbus slave address"},
+          {"address": 6001, "type": "holding", "access": "RW", "name": "Modbus_Baud_Low", "data_type": "uint16", "description": "Baud rate low word"},
+          {"address": 6002, "type": "holding", "access": "RW", "name": "Modbus_Baud_High", "data_type": "uint16", "description": "Baud rate high word"},
+          {"address": 6003, "type": "holding", "access": "RW", "name": "Manufacture_Month", "data_type": "uint16", "description": "Build date month"},
+          {"address": 6004, "type": "holding", "access": "RW", "name": "Manufacture_Day", "data_type": "uint16", "description": "Build date day"},
+          {"address": 6005, "type": "holding", "access": "RW", "name": "Manufacture_Year", "data_type": "uint16", "description": "Build date year"},
+          {"address": 6006, "type": "holding", "access": "R", "name": "Serial_Letter", "data_type": "uint16", "value": 17, "description": "Serial number letter code (17='Q')"},
+          {"address": 6007, "type": "holding", "access": "RW", "name": "Serial_Number_Low", "data_type": "uint16", "description": "Serial number low word"},
+          {"address": 6008, "type": "holding", "access": "RW", "name": "Serial_Number_High", "data_type": "uint16", "description": "Serial number high word"},
+          {"address": 6009, "type": "holding", "access": "RW", "name": "Float_Swap", "data_type": "uint16", "range": "0-1", "description": "Float byte order: 0=Normal, 1=Swapped"},
+          {"address": 6010, "type": "holding", "access": "RW", "name": "Radio_Timeout", "data_type": "uint16", "range": "2-255", "units": "minutes", "description": "Radio communication timeout (min 2 minutes v5.1.8+)"},
+          {"address": 6011, "type": "holding", "access": "RW", "name": "RF_Channel_Network_ID", "data_type": "uint16", "range": "0-255", "description": "Radio network ID (0-52 for 900MHz)"},
+          {"address": 6012, "type": "holding", "access": "R", "name": "Fault_LED_Status", "data_type": "uint16", "description": "Current fault LED state"},
+          {"address": 6034, "type": "holding", "access": "RW", "name": "Calibration_Mode", "data_type": "uint16", "range": "0-1", "version": "5.1.6+", "description": "0=Normal, 1=Calibration mode"},
+          {"address": 6035, "type": "holding", "access": "R", "name": "6940_Sensor_Detection", "data_type": "uint32", "version": "5.1.7+", "description": "Bit mask for 6940 sensors, MSB=Ch1 to LSB=LastCh"},
+          {"address": 6052, "type": "holding", "access": "R", "name": "Monitor_Supply_Voltage_Low", "data_type": "uint16", "version": "5.1.2+", "description": "Monitor voltage low word (float32)"},
+          {"address": 6053, "type": "holding", "access": "R", "name": "Monitor_Supply_Voltage_High", "data_type": "uint16", "version": "5.1.2+", "description": "Monitor voltage high word (float32)"}
+        ],
+        "channel_register_pattern": {
+          "description": "Each channel uses 16 registers. Base address = channel_number * 16",
+          "offsets": [
+            {"offset": 0, "type": "holding/input", "access": "R", "name": "Gas_Reading_Low", "data_type": "uint16", "description": "Gas reading low word (float32)"},
+            {"offset": 1, "type": "holding/input", "access": "R", "name": "Gas_Reading_High", "data_type": "uint16", "description": "Gas reading high word (float32)"},
+            {"offset": 2, "type": "holding/input", "access": "R", "name": "Sensor_Type", "data_type": "uint16", "description": "Sensor type code"},
+            {"offset": 3, "type": "holding/input", "access": "R", "name": "Gas_Type", "data_type": "uint16", "description": "Gas type code"},
+            {"offset": 4, "type": "holding", "access": "RW", "name": "Relay1_Setpoint_Low", "data_type": "uint16", "description": "Relay 1 alarm setpoint low word (float32)"},
+            {"offset": 5, "type": "holding", "access": "RW", "name": "Relay1_Setpoint_High", "data_type": "uint16", "description": "Relay 1 alarm setpoint high word (float32)"},
+            {"offset": 6, "type": "holding", "access": "RW", "name": "Relay2_Setpoint_Low", "data_type": "uint16", "description": "Relay 2 alarm setpoint low word (float32)"},
+            {"offset": 7, "type": "holding", "access": "RW", "name": "Relay2_Setpoint_High", "data_type": "uint16", "description": "Relay 2 alarm setpoint high word (float32)"},
+            {"offset": 8, "type": "holding", "access": "RW", "name": "Relay3_Setpoint_Low", "data_type": "uint16", "description": "Relay 3 alarm setpoint low word (float32)"},
+            {"offset": 9, "type": "holding", "access": "RW", "name": "Relay3_Setpoint_High", "data_type": "uint16", "description": "Relay 3 alarm setpoint high word (float32)"},
+            {"offset": 10, "type": "holding", "access": "RW", "name": "Relay4_Setpoint_Low", "data_type": "uint16", "description": "Relay 4 alarm setpoint low word (float32)"},
+            {"offset": 11, "type": "holding", "access": "RW", "name": "Relay4_Setpoint_High", "data_type": "uint16", "description": "Relay 4 alarm setpoint high word (float32)"},
+            {"offset": 12, "type": "holding", "access": "RW", "name": "Positive_Scale_Low", "data_type": "uint16", "description": "Positive scale limit low word (float32)"},
+            {"offset": 13, "type": "holding", "access": "RW", "name": "Positive_Scale_High", "data_type": "uint16", "description": "Positive scale limit high word (float32)"},
+            {"offset": 14, "type": "holding", "access": "RW", "name": "Negative_Scale_Low", "data_type": "uint16", "description": "Negative scale limit low word (float32)"},
+            {"offset": 15, "type": "holding", "access": "RW", "name": "Negative_Scale_High", "data_type": "uint16", "description": "Negative scale limit high word (float32)"}
+          ]
+        },
+        "rssi_registers": {
+          "description": "Radio Signal Strength Indicator per channel",
+          "base_address": 6201,
+          "variants": [
+            {"channels": 8, "address_range": "6201-6233"},
+            {"channels": 32, "address_range": "6201-6265"},
+            {"channels": 64, "address_range": "6201-6456"}
+          ],
+          "version": "5.1.5+",
+          "data_type": "uint16",
+          "access": "R"
+        },
+        "diagnostic_registers": [
+          {"address": 9900, "type": "input", "access": "R", "name": "Revision_Major", "data_type": "uint16", "description": "Firmware major version"},
+          {"address": 9901, "type": "input", "access": "R", "name": "Revision_Minor", "data_type": "uint16", "description": "Firmware minor version"},
+          {"address": 9902, "type": "input", "access": "R", "name": "Build_Number", "data_type": "uint16", "description": "Firmware build number"},
+          {"address": 9981, "type": "holding", "access": "RW", "name": "Reset_Flag", "data_type": "uint16", "description": "Reset control flag"},
+          {"address": 9982, "type": "holding", "access": "RW", "name": "Soft_Reboot", "data_type": "uint16", "description": "Write 1 to reboot"}
+        ]
+      },
+      "fault_codes": {
+        "F3": {"name": "BAD_LPIR", "description": "Low Power IR sensor fault", "version": "5.0.4+"},
+        "F5": {"name": "NULL_FAULT", "description": "Calibration null fault", "version": "5.0.4+"},
+        "F6": {"name": "CAL_FAULT", "description": "Calibration fault", "version": "5.0.4+"},
+        "F10": {"name": "SENSOR_FAULT", "description": "Various sensor faults"},
+        "F11": {"name": "FAULT_TEMP", "description": "Temporary fault, no fault relay/terminal trigger", "version": "5.0.4+"},
+        "F15": {"name": "RADIO_ERROR", "description": "Radio detected but no valid data"},
+        "NP": {"name": "NEW_PRIMARY", "description": "Monitor becoming primary"},
+        "P": {"name": "PRIMARY", "description": "Primary monitor"},
+        "S": {"name": "SECONDARY", "description": "Secondary monitor"}
+      },
+      "gas_types": [
+        {"code": "LEL", "name": "Lower Explosive Limit", "category": "Combustible"},
+        {"code": "CH4", "name": "Methane", "category": "Combustible"},
+        {"code": "%CH4", "name": "Percent Methane", "category": "Combustible", "version": "2.0.2"},
+        {"code": "H2S", "name": "Hydrogen Sulfide", "category": "Toxic"},
+        {"code": "CO", "name": "Carbon Monoxide", "category": "Toxic"},
+        {"code": "CO2", "name": "Carbon Dioxide", "category": "Asphyxiant"},
+        {"code": "O2", "name": "Oxygen", "category": "Oxidizer"},
+        {"code": "SO2", "name": "Sulfur Dioxide", "category": "Toxic"},
+        {"code": "Cl2", "name": "Chlorine", "category": "Toxic"},
+        {"code": "ClO2", "name": "Chlorine Dioxide", "category": "Toxic"},
+        {"code": "HCl", "name": "Hydrogen Chloride", "category": "Toxic"},
+        {"code": "NH3", "name": "Ammonia", "category": "Toxic"},
+        {"code": "NO", "name": "Nitric Oxide", "category": "Toxic", "version": "5.0.3"},
+        {"code": "NO2", "name": "Nitrogen Dioxide", "category": "Toxic", "version": "3.0.2"},
+        {"code": "O3", "name": "Ozone", "category": "Toxic", "version": "3.0.2"},
+        {"code": "AsH3", "name": "Arsine", "category": "Hydride", "version": "5.1.2"},
+        {"code": "PH3", "name": "Phosphine", "category": "Hydride", "version": "5.0.3"},
+        {"code": "EtO", "name": "Ethylene Oxide", "category": "Organic", "version": "5.1.1"},
+        {"code": "CH3SH", "name": "Methyl Mercaptan", "category": "Organic", "version": "5.1.1"},
+        {"code": "CH2O", "name": "Formaldehyde", "category": "Organic", "version": "3.0.2"},
+        {"code": "HBr", "name": "Hydrogen Bromide", "category": "Halogen", "version": "5.1.0"},
+        {"code": "R410A", "name": "R410A Refrigerant", "category": "Refrigerant", "version": "5.1.3"},
+        {"code": "R1234YF", "name": "R1234YF Refrigerant", "category": "Refrigerant", "version": "5.1.3"},
+        {"code": "R32", "name": "R32 Refrigerant", "category": "Refrigerant", "version": "5.1.3"},
+        {"code": "VOC", "name": "Volatile Organic Compounds", "category": "Organic"},
+        {"code": "INCHES", "name": "Tank Level (inches)", "category": "Non-Gas"},
+        {"code": "4-20", "name": "4-20mA Sensor", "category": "Non-Gas"}
+      ]
+    },
+    "oi-9850": {
+      "project_name": "OI-9850 Wireless Monitor Controller",
+      "current_version": {
+        "major": 3,
+        "minor": 0,
+        "build": 0,
+        "date": "2022-10-06",
+        "description": "New screen support, 2.4GHz net ID fix"
+      },
+      "modbus_config": {
+        "protocol": "Modbus RTU",
+        "role": "Slave",
+        "interfaces": ["RS-485", "RS-232", "USB"],
+        "baud_rates": [9600, 19200, 38400, 57600, 115200],
+        "data_bits": 8,
+        "stop_bits": 1,
+        "parity_options": ["None", "Even", "Odd"],
+        "default_baud": 9600,
+        "buffer_tx_size": 257,
+        "buffer_rx_size": 257
+      },
+      "channels": {
+        "max_channels": 255,
+        "description": "Supports up to 255 wireless gas sensors"
+      },
+      "source_files": [
+        {"path": "anjoytell/oi-9850-master/oi-9850-master/9850-1/files/modBus.c", "type": "implementation", "description": "Modbus implementation"},
+        {"path": "anjoytell/oi-9850-master/oi-9850-master/9850-1/files/modBus.h", "type": "header", "description": "Modbus declarations"},
+        {"path": "anjoytell/oi-9850-master/oi-9850-master/9850-1/files/Registry.c", "type": "implementation", "description": "Register map implementation"},
+        {"path": "anjoytell/oi-9850-master/oi-9850-master/9850-1/files/Registry.h", "type": "header", "description": "Register declarations"},
+        {"path": "anjoytell/oi-9850-master/oi-9850-master/9850-1/files/Modbus232.c", "type": "implementation", "description": "RS-232 Modbus interface"},
+        {"path": "anjoytell/oi-9850-master/oi-9850-master/9850-1/files/local.h", "type": "header", "description": "Local definitions"}
+      ],
+      "modbus_functions": [
+        {"code": 3, "name": "Read Holding Registers", "description": "Read values from holding registers"},
+        {"code": 4, "name": "Read Input Registers", "description": "Read values from input registers"},
+        {"code": 6, "name": "Write Single Register", "description": "Write a single holding register"},
+        {"code": 16, "name": "Write Multiple Registers", "description": "Write multiple holding registers"}
+      ],
+      "register_map": {
+        "system_registers": [
+          {"address": 6000, "type": "holding", "access": "RW", "name": "Modbus_Address", "data_type": "uint16", "range": "1-247", "description": "Device Modbus slave address"},
+          {"address": 6001, "type": "holding", "access": "RW", "name": "Modbus_Baud_Low", "data_type": "uint16", "description": "Baud rate low word"},
+          {"address": 6002, "type": "holding", "access": "RW", "name": "Modbus_Baud_High", "data_type": "uint16", "description": "Baud rate high word"},
+          {"address": 6003, "type": "holding", "access": "RW", "name": "Build_Month", "data_type": "uint16", "description": "Manufacturing date month"},
+          {"address": 6004, "type": "holding", "access": "RW", "name": "Build_Day", "data_type": "uint16", "description": "Manufacturing date day"},
+          {"address": 6005, "type": "holding", "access": "RW", "name": "Build_Year", "data_type": "uint16", "description": "Manufacturing date year"},
+          {"address": 6006, "type": "holding", "access": "R", "name": "Serial_Letter", "data_type": "uint16", "value": 17, "description": "Serial number letter (17='Q')"},
+          {"address": 6007, "type": "holding", "access": "RW", "name": "Serial_Number_Low", "data_type": "uint16", "description": "Serial number low word"},
+          {"address": 6008, "type": "holding", "access": "RW", "name": "Serial_Number_High", "data_type": "uint16", "description": "Serial number high word"},
+          {"address": 6009, "type": "holding", "access": "RW", "name": "Float_Swap", "data_type": "uint16", "range": "0-1", "description": "Float byte order: 0=Normal, 1=Swapped"},
+          {"address": 6010, "type": "holding", "access": "RW", "name": "Radio_Timeout", "data_type": "uint16", "range": "0-255", "units": "minutes", "description": "Radio communication timeout"},
+          {"address": 6011, "type": "holding", "access": "RW", "name": "RF_Channel_Network_ID", "data_type": "uint16", "description": "Radio network ID"},
+          {"address": 6012, "type": "holding", "access": "R", "name": "Fault_LED_Status", "data_type": "uint16", "description": "Current fault LED state"},
+          {"address": 6013, "type": "holding", "access": "R", "name": "Gen2_Radio_Check", "data_type": "uint16", "version": "2.0.8+", "description": "0=Gen1/None, 1=Gen2"},
+          {"address": 6014, "type": "holding", "access": "R", "name": "Radio_Frequency_Type", "data_type": "uint16", "version": "2.0.8+", "description": "0=900MHz/None, 1=2.4GHz"},
+          {"address": 6015, "type": "holding", "access": "RW", "name": "Primary_Secondary", "data_type": "uint16", "version": "2.0.8+", "range": "0-1", "description": "0=Primary, 1=Secondary"},
+          {"address": 6016, "type": "holding", "access": "R", "name": "Primary_Secondary_Stage", "data_type": "uint16", "version": "2.0.8+", "description": "0=Primary, 1-3=Secondary/NewPrimary"},
+          {"address": 6017, "type": "holding", "access": "RW", "name": "Factory_Default_Reset", "data_type": "uint16", "version": "2.0.8+", "description": "Write 1 to reset to defaults"},
+          {"address": 6052, "type": "holding", "access": "R", "name": "Monitor_Supply_Voltage_Low", "data_type": "uint16", "version": "2.0.7+", "description": "Monitor voltage low word (float32)"},
+          {"address": 6053, "type": "holding", "access": "R", "name": "Monitor_Supply_Voltage_High", "data_type": "uint16", "version": "2.0.7+", "description": "Monitor voltage high word (float32)"}
+        ],
+        "channel_register_pattern": {
+          "description": "Each channel uses 16 registers. Base address = channel_number * 16",
+          "offsets": [
+            {"offset": 0, "type": "holding/input", "access": "R", "name": "Gas_Reading_Low", "data_type": "uint16", "description": "Gas reading low word (float32)"},
+            {"offset": 1, "type": "holding/input", "access": "R", "name": "Gas_Reading_High", "data_type": "uint16", "description": "Gas reading high word (float32)"},
+            {"offset": 2, "type": "holding/input", "access": "R", "name": "Sensor_Type", "data_type": "uint16", "description": "Sensor type code"},
+            {"offset": 3, "type": "holding/input", "access": "R", "name": "Gas_Type", "data_type": "uint16", "description": "Gas type code"},
+            {"offset": 4, "type": "holding", "access": "RW", "name": "Relay1_Setpoint_Low", "data_type": "uint16", "description": "Relay 1 alarm setpoint low word (float32)"},
+            {"offset": 5, "type": "holding", "access": "RW", "name": "Relay1_Setpoint_High", "data_type": "uint16", "description": "Relay 1 alarm setpoint high word (float32)"},
+            {"offset": 6, "type": "holding", "access": "RW", "name": "Relay2_Setpoint_Low", "data_type": "uint16", "description": "Relay 2 alarm setpoint low word (float32)"},
+            {"offset": 7, "type": "holding", "access": "RW", "name": "Relay2_Setpoint_High", "data_type": "uint16", "description": "Relay 2 alarm setpoint high word (float32)"},
+            {"offset": 8, "type": "holding", "access": "RW", "name": "Relay3_Setpoint_Low", "data_type": "uint16", "description": "Relay 3 alarm setpoint low word (float32)"},
+            {"offset": 9, "type": "holding", "access": "RW", "name": "Relay3_Setpoint_High", "data_type": "uint16", "description": "Relay 3 alarm setpoint high word (float32)"},
+            {"offset": 10, "type": "holding", "access": "RW", "name": "Relay4_Setpoint_Low", "data_type": "uint16", "description": "Relay 4 alarm setpoint low word (float32)"},
+            {"offset": 11, "type": "holding", "access": "RW", "name": "Relay4_Setpoint_High", "data_type": "uint16", "description": "Relay 4 alarm setpoint high word (float32)"},
+            {"offset": 12, "type": "holding", "access": "RW", "name": "Positive_Scale_Low", "data_type": "uint16", "description": "Positive scale limit low word (float32)"},
+            {"offset": 13, "type": "holding", "access": "RW", "name": "Positive_Scale_High", "data_type": "uint16", "description": "Positive scale limit high word (float32)"},
+            {"offset": 14, "type": "holding", "access": "RW", "name": "Negative_Scale_Low", "data_type": "uint16", "description": "Negative scale limit low word (float32)"},
+            {"offset": 15, "type": "holding", "access": "RW", "name": "Negative_Scale_High", "data_type": "uint16", "description": "Negative scale limit high word (float32)"}
+          ]
+        },
+        "rssi_registers": {
+          "description": "Radio Signal Strength Indicator per channel",
+          "base_address": 6201,
+          "address_range": "6201-6456",
+          "max_channels": 255,
+          "version": "2.0.8+",
+          "data_type": "uint16",
+          "access": "R",
+          "note": "0=unused channel, >0=RSSI value"
+        },
+        "special_write_registers": [
+          {"address": 9275, "type": "holding", "access": "W", "name": "Clear_Lock1", "data_type": "uint16", "description": "Clear lock register 1"},
+          {"address": 9276, "type": "holding", "access": "W", "name": "Clear_Lock2", "data_type": "uint16", "description": "Clear lock register 2"},
+          {"address": 9277, "type": "holding", "access": "W", "name": "Clear_Lock3", "data_type": "uint16", "description": "Clear lock register 3"},
+          {"address": 9278, "type": "holding", "access": "W", "name": "Set_Serial_Low", "data_type": "uint16", "description": "Set serial number low word"},
+          {"address": 9279, "type": "holding", "access": "W", "name": "Set_Serial_High", "data_type": "uint16", "description": "Set serial number high word"},
+          {"address": 9280, "type": "holding", "access": "W", "name": "Set_Month", "data_type": "uint16", "description": "Set manufacturing month"},
+          {"address": 9281, "type": "holding", "access": "W", "name": "Set_Day", "data_type": "uint16", "description": "Set manufacturing day"},
+          {"address": 9282, "type": "holding", "access": "W", "name": "Set_Year", "data_type": "uint16", "description": "Set manufacturing year"}
+        ],
+        "diagnostic_registers": [
+          {"address": 9899, "type": "holding", "access": "R", "name": "Revision_Major", "data_type": "uint16", "version": "2.0.8+", "description": "Firmware major version"},
+          {"address": 9900, "type": "holding", "access": "R", "name": "Revision_Minor", "data_type": "uint16", "version": "2.0.8+", "description": "Firmware minor version"},
+          {"address": 9901, "type": "holding", "access": "R", "name": "Build_Number", "data_type": "uint16", "version": "2.0.8+", "description": "Firmware build number"},
+          {"address": 9981, "type": "holding", "access": "RW", "name": "Reset_Flag", "data_type": "uint16", "description": "Reset control flag"},
+          {"address": 9982, "type": "holding", "access": "RW", "name": "Modbus_Heartbeat", "data_type": "uint16", "version": "2.0.8+", "description": "Toggles with each read, Write 1 to reboot"},
+          {"address": 9983, "type": "holding", "access": "R", "name": "Good_Messages_Low", "data_type": "uint16", "description": "Good message count low word"},
+          {"address": 9984, "type": "holding", "access": "R", "name": "Good_Messages_High", "data_type": "uint16", "description": "Good message count high word"},
+          {"address": 9985, "type": "holding", "access": "R", "name": "Bad_Messages_Low", "data_type": "uint16", "description": "Bad message count low word"},
+          {"address": 9986, "type": "holding", "access": "R", "name": "Bad_Messages_High", "data_type": "uint16", "description": "Bad message count high word"},
+          {"address": 9987, "type": "holding", "access": "R", "name": "Good_Laird_Low", "data_type": "uint16", "description": "Good Laird messages low word"},
+          {"address": 9988, "type": "holding", "access": "R", "name": "Good_Laird_High", "data_type": "uint16", "description": "Good Laird messages high word"},
+          {"address": 9989, "type": "holding", "access": "R", "name": "Bad_Laird_Low", "data_type": "uint16", "description": "Bad Laird messages low word"},
+          {"address": 9990, "type": "holding", "access": "R", "name": "Bad_Laird_High", "data_type": "uint16", "description": "Bad Laird messages high word"},
+          {"address": 9991, "type": "holding", "access": "R", "name": "Good_Legacy_Low", "data_type": "uint16", "description": "Good Legacy messages low word"},
+          {"address": 9992, "type": "holding", "access": "R", "name": "Good_Legacy_High", "data_type": "uint16", "description": "Good Legacy messages high word"},
+          {"address": 9993, "type": "holding", "access": "R", "name": "Bad_Legacy_Low", "data_type": "uint16", "description": "Bad Legacy messages low word"},
+          {"address": 9994, "type": "holding", "access": "R", "name": "Bad_Legacy_High", "data_type": "uint16", "description": "Bad Legacy messages high word"},
+          {"address": 9995, "type": "holding", "access": "R", "name": "On_Time_Days", "data_type": "uint16", "description": "Device uptime days"},
+          {"address": 9996, "type": "holding", "access": "R", "name": "On_Time_Hours", "data_type": "uint16", "description": "Device uptime hours"},
+          {"address": 9997, "type": "holding", "access": "R", "name": "On_Time_Minutes", "data_type": "uint16", "description": "Device uptime minutes"},
+          {"address": 9998, "type": "holding", "access": "R", "name": "On_Time_Seconds", "data_type": "uint16", "description": "Device uptime seconds"}
+        ]
+      },
+      "fault_codes": {
+        "F3": {"name": "BAD_LPIR", "description": "Low Power IR sensor fault", "version": "2.0.0+"},
+        "F5": {"name": "NULL_FAULT", "description": "Null calibration fault", "version": "2.0.0+"},
+        "F6": {"name": "CAL_FAULT", "description": "Calibration fault", "version": "2.0.0+"},
+        "F11": {"name": "FAULT_TEMP", "description": "Temporary fault, no 2mA/4-20 output", "version": "2.0.0+"}
+      },
+      "gas_types": [
+        {"code": "LEL", "name": "Lower Explosive Limit", "category": "Combustible"},
+        {"code": "CH4", "name": "Methane", "category": "Combustible"},
+        {"code": "%CH4", "name": "Percent Methane", "category": "Combustible", "version": "1.1.4"},
+        {"code": "H2S", "name": "Hydrogen Sulfide", "category": "Toxic"},
+        {"code": "CO", "name": "Carbon Monoxide", "category": "Toxic"},
+        {"code": "CO2", "name": "Carbon Dioxide", "category": "Asphyxiant"},
+        {"code": "O2", "name": "Oxygen", "category": "Oxidizer"},
+        {"code": "SO2", "name": "Sulfur Dioxide", "category": "Toxic"},
+        {"code": "NO", "name": "Nitric Oxide", "category": "Toxic", "version": "1.1.4"},
+        {"code": "NO2", "name": "Nitrogen Dioxide", "category": "Toxic"},
+        {"code": "O3", "name": "Ozone", "category": "Toxic"},
+        {"code": "PH3", "name": "Phosphine", "category": "Hydride", "version": "1.1.4"},
+        {"code": "AsH3", "name": "Arsine", "category": "Hydride", "version": "2.0.5"},
+        {"code": "EtO", "name": "Ethylene Oxide", "category": "Organic", "version": "2.0.4"},
+        {"code": "CH3SH", "name": "Methyl Mercaptan", "category": "Organic", "version": "2.0.4"},
+        {"code": "CH2O", "name": "Formaldehyde", "category": "Organic"},
+        {"code": "HBr", "name": "Hydrogen Bromide", "category": "Halogen", "version": "2.0.4"},
+        {"code": "R410A", "name": "R410A Refrigerant", "category": "Refrigerant", "version": "2.0.6"},
+        {"code": "R1234YF", "name": "R1234YF Refrigerant", "category": "Refrigerant", "version": "2.0.6"},
+        {"code": "R32", "name": "R32 Refrigerant", "category": "Refrigerant", "version": "2.0.6"},
+        {"code": "VOC", "name": "Volatile Organic Compounds", "category": "Organic"},
+        {"code": "VOLTS", "name": "Voltage Sensor", "category": "Non-Gas", "version": "2.0.8"}
+      ],
+      "features": {
+        "web_interface": true,
+        "ethernet": true,
+        "usb_modbus": true,
+        "dhcp_support": true,
+        "rki_variant": {"available": true, "version": "2.0.10+", "serial_letter": "RH", "display_name": "AirLink 9850"}
+      }
+    }
+  },
+  "common_features": {
+    "primary_secondary_network": {
+      "description": "Both systems support Primary/Secondary monitor network configurations",
+      "primary_address": 1,
+      "secondary_addresses": "2-247",
+      "automatic_failover": true
+    },
+    "radio_types": [
+      {"name": "Laird", "frequencies": ["900MHz", "2.4GHz"], "description": "Laird wireless radios"},
+      {"name": "Legacy", "frequencies": ["900MHz"], "description": "Older generation 900MHz radios"},
+      {"name": "RFM", "description": "RFM radio modules"}
+    ],
+    "float_handling": {
+      "description": "Configurable float byte order via register 6009",
+      "modes": [
+        {"value": 0, "description": "Normal: Odd register = LSW, Even register = MSW"},
+        {"value": 1, "description": "Swapped: Even register = LSW, Odd register = MSW"}
+      ]
+    }
+  },
+  "bom_data": {
+    "description": "Bill of Materials files with Modbus-related component references",
+    "location": "repo to ai/bom csv fishy",
+    "files": [
+      {"file": "OI-6000K-NXP.csv", "lines": [7290, 8600], "description": "OI-6000K BOM"},
+      {"file": "OI-6900-C-2B.csv", "lines": [11168, 11686], "description": "OI-6900 BOM"},
+      {"file": "bom parts/Full Parts.2.csv", "lines": "1394-4958", "description": "Complete parts database"},
+      {"file": "bom parts/Parts 4201-4300.csv", "lines": "36-101", "description": "Extensive Modbus component references"}
+    ],
+    "component_categories": [
+      "RS-485 transceivers (IC-RXTX)",
+      "Microcontrollers (PIC series)",
+      "UART communication ICs",
+      "Power regulators",
+      "Connectors"
+    ]
+  }
+}
